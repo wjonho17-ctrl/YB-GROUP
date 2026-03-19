@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PHARMACY MANAGEMENT SYSTEM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .section h2 {
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input, select {
+            padding: 8px 10px;
+            border: 1px solid #bbb;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            background-color: #f0f8ff;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button.danger {
+            background-color: #e74c3c;
+        }
+        button.danger:hover {
+            background-color: #c0392b;
+        }
+        button.success {
+            background-color: #27ae60;
+        }
+        button.success:hover {
+            background-color: #229954;
+        }
+        .product-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 0.8fr 0.8fr 1fr 1fr;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .product-grid label {
+            font-size: 12px;
+        }
+        .product-grid input {
+            width: 100%;
+        }
+        .remove-btn {
+            background-color: #e74c3c;
+            padding: 6px 10px;
+            width: 100%;
+        }
+        #productsList {
+            margin-top: 20px;
+        }
+        .summary {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 3px;
+            margin-top: 20px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #bdc3c7;
+        }
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>UNIKA PHARMACY LTD</h1>
+        
+        <form id="quotationForm">
+            <!-- Customer Information Section -->
+            <div class="section">
+                <h2>Customer Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="customerName">Customer Name *</label>
+                        <input type="text" id="customerName" name="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tinNumber">TIN Number *</label>
+                        <input type="text" id="tinNumber" name="tinNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobileNumber">Mobile Number</label>
+                        <input type="tel" id="mobileNumber" name="mobileNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country *</label>
+                        <input type="text" id="country" name="country" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div class="section">
+                <h2>Products</h2>
+                <div id="productsList"></div>
+                <button type="button" onclick="addProduct()">+ Add Product</button>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="section">
+                <h2>Summary</h2>
+                <div class="summary">
+                    <div class="summary-row">
+                        <span>Total Items:</span>
+                        <span id="totalItems">0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Total Amount:</span>
+                        <span id="totalAmount">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button onclick="location.href='print_invoice.html'" style="background-color: #20c997;justify-self: start;border-radius: 10px;">Generate invoice</button>
+                <button type="submit" class="success">Generate Quotation</button>
+                <button type="reset">Clear Form</button>
+                <button type="button" onclick="saveData()" class="success">Save Data</button>
+                <button type="button" onclick="loadData()">Load Data</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let products = [];
+
+        function addProduct() {
+            const productId = Date.now();
+            products.push({id: productId, product: '', expiry: '', qty: 1, unit: 'BX', price: 0});
+            renderProducts();
+            updateSummary();
+        }
+
+        function removeProduct(id) {
+            products = products.filter(p => p.id !== id);
+            renderProducts();
+            updateSummary();
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('productsList');
+            container.innerHTML = '';
+
+            products.forEach((product, index) => {
+                const div = document.createElement('div');
+                div.className = 'product-item';
+                div.innerHTML = `
+                    <div class="product-grid">
+                        <div class="form-group">
+                            <label>Product Name</label>
+                            <input type="text" value="${product.product}" onchange="updateProduct(${product.id}, 'product', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Batch #</label>
+                            <input type="text" value="${product.batch}" onchange="updateProduct(${product.id}, 'batch', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Expiry</label>
+                            <input type="text" placeholder="MM/YYYY" value="${product.expiry}" onchange="updateProduct(${product.id}, 'expiry', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Qty</label>
+                            <input type="number" value="${product.qty}" min="1" onchange="updateProduct(${product.id}, 'qty', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Unit</label>
+                            <select onchange="updateProduct(${product.id}, 'unit', this.value)">
+                                <option ${product.unit === 'BX' ? 'selected' : ''}>BX</option>
+                                <option ${product.unit === 'TU' ? 'selected' : ''}>TU</option>
+                                <option ${product.unit === 'PC' ? 'selected' : ''}>PC</option>
+                                <option ${product.unit === 'ML' ? 'selected' : ''}>ML</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="number" value="${product.price}" min="0" step="0.01" onchange="updateProduct(${product.id}, 'price', this.value)">
+                        </div>
+                        <button type="button" class="remove-btn danger" onclick="removeProduct(${product.id})">Remove</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            updateSummary();
+        }
+
+        function updateProduct(id, field, value) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                product[field] = field === 'qty' || field === 'price' ? parseFloat(value) || 0 : value;
+            }
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const totalItems = products.reduce((sum, p) => sum + parseInt(p.qty || 0), 0);
+            const totalAmount = products.reduce((sum, p) => sum + ((p.qty || 0) * (p.price || 0)), 0).toFixed(2);
+            
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('totalAmount').textContent = totalAmount;
+        }
+
+        function saveData() {
+            const formData = {
+                customerName: document.getElementById('customerName').value,
+                tinNumber: document.getElementById('tinNumber').value,
+                mobileNumber: document.getElementById('mobileNumber').value,
+                country: document.getElementById('country').value,
+                products: products
+            };
+            localStorage.setItem('quotationData', JSON.stringify(formData));
+            alert('Data saved successfully!');
+        }
+
+        function loadData() {
+            const data = localStorage.getItem('quotationData');
+            if (data) {
+                const formData = JSON.parse(data);
+                document.getElementById('customerName').value = formData.customerName || '';
+                document.getElementById('tinNumber').value = formData.tinNumber || '';
+                document.getElementById('mobileNumber').value = formData.mobileNumber || '';
+                document.getElementById('country').value = formData.country || '';
+                products = formData.products || [];
+                renderProducts();
+                alert('Data loaded successfully!');
+            } else {
+                alert('No saved data found!');
+            }
+        }
+
+        document.getElementById('quotationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (products.length === 0) {
+                alert('Please add at least one product!');
+                return;
+            }
+
+            const formData = {
+                customerName: document.getElementById('customerName').value,
+                tinNumber: document.getElementById('tinNumber').value,
+                mobileNumber: document.getElementById('mobileNumber').value,
+                country: document.getElementById('country').value,
+                products: products
+            };
+
+            // Store in localStorage for william.html to access
+            localStorage.setItem('quotationData', JSON.stringify(formData));
+            
+            // Open william.html in a new window
+            window.open('william.html', 'quotation');
+            
+            alert('Quotation window opened!');
+        });
+
+        // Load data on page load if available
+        window.addEventListener('load', function() {
+            const saved = localStorage.getItem('quotationData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('customerName').value = data.customerName || '';
+                document.getElementById('tinNumber').value = data.tinNumber || '';
+                document.getElementById('mobileNumber').value = data.mobileNumber || '';
+                document.getElementById('country').value = data.country || '';
+                products = data.products || [];
+                renderProducts();
+            }
+        });
+    </script>
+</body>
+</html>

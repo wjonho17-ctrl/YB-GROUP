@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMS - Pharmacy Dashboard</title>
+    <!-- Added Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --primary: #2a7be4;
+            --secondary: #20c997;
+            --bg: #f4f7fb;
+            --white: #ffffff;
+            --text: #2c3e50;
+            --muted: #7f8c8d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 80px;
+            background: var(--white);
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            z-index: 10;
+        }
+
+        .logo {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .sidebar i {
+            font-style: normal;
+            font-size: 20px;
+            margin: 18px 0;
+            cursor: pointer;
+            color: var(--muted);
+            transition: 0.3s;
+        }
+
+        .sidebar i:hover {
+            color: var(--primary);
+        }
+
+        /* MAIN */
+        .main-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        /* CUSTOM ANIMATION FOR SCROLL */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .animate-scroll {
+            display: flex;
+            width: max-content;
+            animation: scroll 20s linear infinite;
+        }
+
+        .animate-scroll:hover {
+            animation-play-state: paused;
+        }
+
+        /* TABLE STYLES */
+        .table-container {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        td {
+            padding: 14px;
+            border-top: 1px solid #eee;
+        }
+
+        /* FILTERS */
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filters input, .filters select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: white;
+        }
+
+        .btn {
+            background: var(--secondary);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        @media(max-width: 768px) {
+            .sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">PMS</div>
+        <i>🏠</i>
+        <i>💊</i>
+        <i>📦</i>
+        <i>📊</i>
+        <i>⚙️</i>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+         <!-- SALES DASHBOARD SECTION -->
+        <div>
+
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">Sales Dashboard</h2>
+                <p class="text-slate-500 text-sm">Patient & Company Sales</p>
+             
+            </div>
+          
+        
+        <!-- FEATURED SECTION -->
+        <h2 class="text-center text-slate-700 text-lg font-medium mb-6" style="color: hwb(163 85% 12%); background-color: green; padding: 10px; border-radius: 8px;">
+            Welcome! To the <strong>Digitol Pharmacy system</strong> now you can see the products available in our stock </h2>
+
+       <div class="relative overflow-hidden w-full mb-10">
+    <div class="animate-scroll flex gap-6">
+
+        <!-- Card 1 -->
+        <div class="w-72 bg-white rounded-2xl shadow-md border border-slate-100 p-4 flex-shrink-0">
+            <img src="amorzaar.jfif" class="h-40 w-full object-contain mb-4">
+            <p class="text-emerald-600 text-[10px] font-bold uppercase">Health & Wellness</p>
+            <h3 class="font-bold text-slate-800">Paracetamol</h3>
+            <div class="flex justify-between items-center mt-3">
+                <span class="font-bold text-lg">8,500 RWF</span>
+                <button class="bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="w-72 bg-white rounded-2xl shadow-md border border-slate-100 p-4 flex-shrink-0">
+            <img src="amoxicilline.jfif" class="h-40 w-full object-contain mb-4">
+            <p class="text-emerald-600 text-[10px] font-bold uppercase">Amorzaar</p>
+            <h3 class="font-bold text-slate-800">Blood Pressure Relief</h3>
+            <div class="flex justify-between items-center mt-3">
+                <span class="font-bold text-lg">12,000 RWF</span>
+                <button class="bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="w-72 bg-white rounded-2xl shadow-md border border-slate-100 p-4 flex-shrink-0">
+            <img src="asprine.jfif" class="h-40 w-full object-contain mb-4">
+            <p class="text-emerald-600 text-[10px] font-bold uppercase">Supplement</p>
+            <h3 class="font-bold text-slate-800">Omega-3 Fish Oil</h3>
+            <div class="flex justify-between items-center mt-3">
+                <span class="font-bold text-lg">15,500 RWF</span>
+                <button class="bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="w-72 bg-white rounded-2xl shadow-md border border-slate-100 p-4 flex-shrink-0">
+            <img src="amoxicilline.jfif" class="h-40 w-full object-contain mb-4">
+            <p class="text-emerald-600 text-[10px] font-bold uppercase">Immunity</p>
+            <h3 class="font-bold text-slate-800">Amoxicillin 500mg</h3>
+            <div class="flex justify-between items-center mt-3">
+                  <span class="font-bold text-lg">6,200 RWF</span>
+                <button class="bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Duplicate for seamless loop -->
+        <div class="w-72 bg-white rounded-2xl shadow-md border border-slate-100 p-4 flex-shrink-0">
+            <img src="paracetamol.jfif" class="h-40 w-full object-contain mb-4">
+            <p class="text-emerald-600 text-[10px] font-bold uppercase">Health & Wellness</p>
+            <h3 class="font-bold text-slate-800">Paracetamol</h3>
+            <div class="flex justify-between items-center mt-3">
+                <span class="font-bold text-lg">8,500 RWF</span>
+                <button class="bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs">Buy Now</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+        <hr class="mb-10 border-slate-200">
+        <!----------botton-->
+        <div class="flex justify-end mb-6">
+            <button onclick="location.href='input.html'" style="background-color: blue; justify-self: start;border-radius: 8px;color: white;">Generate sales</button>
+            <button class="btn ml-10"style="background-color:blue">Generate sales</button>    
+            <button class="btn ml-10"style="background-color:blue">Add expense</button>
+            <button class="btn ml-10"style="background-color:blue">Generate Report</button>  
+            <button class="btn ml-10" style="background-color:blue">Fund medical</button>
+            
+
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+            <input type="text" placeholder=" Reference">
+            <input type="date">
+            <input type="text" placeholder="Customer">
+            <select>
+                <option>All Payments</option>
+                <option>Cash</option>
+                <option>Mobile Money</option>
+                <option>Card</option>
+                <option>bank</option>
+            </select>
+            <select>
+                <option>All Types</option>
+                <option>Normal</option>
+                <option>Return</option>
+                <option>Exchange</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Payment</th>
+                        <th>Type</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>97781-1894426</td>
+                        <td>05 Mar 2026</td>
+                        <td>YELLO</td>
+                        <td>
+                            <div class="font-bold text-slate-800">750 RWF</div>
+                            <div class="text-xs text-slate-400">Mobile Money</div>
+                        </td>
+                        <td><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs">Cash Normal</span></td>
+                        <td class="text-blue-500 cursor-pointer font-medium">View</td>
+                    </tr>
+                    <tr>
+                        <td>36461-1166826</td>
+                        <td>05 Mar 2026</td>
+                        <td>TESTING</td>
+                        <td>
+                            <div class="font-bold text-slate-800">600 RWF</div>
+                            <div class="text-xs text-slate-400">Card</div>
+                        </td>
+                        <td><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs">Cash Normal</span></td>
+                        <td class="text-blue-500 cursor-pointer font-medium">View</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
