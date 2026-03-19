@@ -3,215 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rwanda Pharmacy System</title>
+    <title>PharmaConnect Rwanda | Wholesale & Retail</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .tab-active { border-bottom: 3px solid #2563eb; color: #2563eb; font-weight: 700; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
     </style>
 </head>
-
 <body class="bg-slate-50 min-h-screen">
 
-    <!-- TOP NAVIGATION -->
-    <nav class="bg-white border-b sticky top-0 z-10">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <span class="text-2xl"> </span>
-                <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600">
-                    Rwanda Pharmacy
-                </h1>
-            </div>
-            <div class="text-xs font-medium text-slate-400 uppercase tracking-widest">Digital Health Portal</div>
+    <nav class="bg-white/80 backdrop-blur-md border-b px-8 py-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-2 rounded-xl text-white shadow-lg">ok</div>
+            <h1 class="text-xl font-extrabold tracking-tight text-slate-800">VURA. <span class="text-blue-600 text-sm font-medium">RW</span></h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold border border-blue-100">SERVED BY WILLIAM</div>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="max-w-7xl mx-auto p-6 grid grid-cols-12 gap-8">
         
-        <!-- LEFT COLUMN: SEARCH & RESULTS -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="col-span-12 lg:col-span-8 space-y-6">
             
-            <!-- SEARCH BOX -->
-            <div class="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 flex items-center">
-                <input id="search" type="text" 
-                    placeholder="Search medicine name or code (e.g., 4456)..."
-                    class="flex-1 p-4 outline-none text-slate-700 bg-transparent"
-                    onkeyup="if(event.key === 'Enter') searchAll()">
-                <button onclick="searchAll()"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl transition-all font-semibold shadow-md shadow-blue-100">
-                    Search
-                </button>
+            <div class="flex gap-8 border-b border-slate-200">
+                <button onclick="switchTab('retail')" id="tab-retail" class="tab-active pb-3 transition-all">Pharmacy Network</button>
+                <button onclick="switchTab('wholesale')" id="tab-wholesale" class="pb-3 text-slate-400 transition-all">Wholesale Inquiry</button>
             </div>
 
-            <!-- RESULTS AREA -->
-            <div id="result-container" class="space-y-4">
-                <div id="empty-state" class="py-20 text-center">
-                    <div class="text-5xl mb-4">🔍</div>
-                    <p class="text-slate-400">Search for medication to see available pharmacies</p>
-                </div>
-                <div id="result" class="grid grid-cols-1 gap-4"></div>
-            </div>
-        </div>
-
-        <!-- RIGHT COLUMN: CART -->
-        <div class="lg:col-span-1">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 sticky top-24 overflow-hidden">
-                <div class="p-5 border-b bg-slate-50/50 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800 flex items-center gap-2">
-                        <span>🛒</span> Your Selection
-                    </h3>
-                    <span id="cart-count" class="bg-blue-100 text-blue-600 text-xs font-bold px-2 py-1 rounded-full">0</span>
+            <div id="section-retail" class="space-y-4">
+                <div class="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 flex">
+                    <input id="search" type="text" placeholder="Search medicine (e.g., Amoxicillin)..." 
+                           class="flex-1 p-4 outline-none bg-transparent">
+                    <button onclick="searchAll()" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all">Search All Pharmacies</button>
                 </div>
                 
-                <div class="p-5">
-                    <ul id="cart" class="space-y-3 max-h-[400px] overflow-y-auto mb-4">
-                        <p class="text-sm text-slate-400 text-center py-4 italic">No items added yet</p>
-                    </ul>
-                    
-                    <div class="pt-4 border-t border-dashed">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-slate-500 font-medium">Estimated Total</span>
-                            <span class="text-xl font-bold text-slate-900"><span id="total">0</span> <small class="text-xs">RWF</small></span>
-                        </div>
-                        <button class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-100">
-                            Proceed to Pharmacy
-                        </button>
+                <div id="result" class="grid gap-3">
                     </div>
+            </div>
+
+            <div id="section-wholesale" class="hidden animate-in fade-in duration-500">
+                <div class="bg-slate-900 rounded-3xl p-6 text-white mb-6 relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h2 class="text-xl font-bold mb-1">Wholesale Matching</h2>
+                        <p id="logic-text" class="text-slate-400 text-sm font-medium tracking-wide">Select your partners below</p>
+                    </div>
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl"></div>
                 </div>
+                <div id="wholesaler-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    </div>
             </div>
         </div>
 
-    </main>
-
-<script>
-const pharmacies = [
-    {
-        name: "UNIKA PHARMACY",
-        address: "Kigali - Nyabugogo",
-        phone: "0784040780",
-        stock: [
-            {name:"Amoxicillin 500mg", price:2000},
-            {name:"Ibuprofen 400mg", price:3000}
-        ]
-    },
-    {
-        name: "LEGERO PHARMACY",
-        address: "Kigali - Karama",
-        phone: "0784074997",
-        stock: [
-            {name:"Ibuprofen 400mg", price:3200}
-        ]
-    },
-    {
-        name: "SILOAM PHARMACY",
-        address: "Kigali - Nyamirambo",
-        phone: "0784040786",
-        stock: [
-            {name:"Amoxicillin 500mg", price:2100}
-        ]
-    }
-];
-
-const codes = { "4456": ["Amoxicillin 500mg", "Ibuprofen 400mg"] };
-let cart = [];
-
-function searchAll(){
-    const input = document.getElementById("search").value.toLowerCase();
-    const resultDiv = document.getElementById("result");
-    const emptyState = document.getElementById("empty-state");
-
-    if(!input) return;
-
-    resultDiv.innerHTML = "";
-    emptyState.classList.add("hidden");
-    let found = false;
-
-    // Helper to render card
-    const createCard = (med, pharmacy) => {
-        return `
-        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex justify-between items-center group">
-            <div class="flex-1">
-                <div class="flex items-center gap-2 mb-1">
-                    <h4 class="font-bold text-slate-800 text-lg">${med.name}</h4>
-                    <span class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-medium">In Stock</span>
+        <div class="col-span-12 lg:col-span-4">
+            <div class="bg-white rounded-[2rem] border border-slate-200 shadow-xl overflow-hidden sticky top-24">
+                <div class="p-6 border-b bg-slate-50/50 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800">Inquiry List <span class="text-xs text-slate-400 ml-2">(Price Hidden)</span></h3>
+                    <span id="cart-count" class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-lg font-bold">10</span>
                 </div>
-                <p class="text-blue-600 font-bold text-md mb-2">${med.price.toLocaleString()} RWF</p>
-                <div class="flex items-center gap-3 text-slate-500 text-sm">
-                    <span class="flex items-center gap-1">📍 ${pharmacy.name}</span>
-                    <span class="text-slate-300">|</span>
-                    <span class="flex items-center gap-1">📞 ${pharmacy.phone}</span>
+                <div class="p-6">
+                    <ul id="cart-list" class="space-y-2 mb-6 max-h-[400px] overflow-y-auto">
+                        </ul>
+                    <button onclick="switchTab('wholesale')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all flex items-center justify-center gap-2">
+                        View Wholesalers
+                    </button>
                 </div>
             </div>
-            <button onclick="addToCart('${med.name}', ${med.price})"
-                class="bg-slate-900 group-hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors">
-                Add to Cart
-            </button>
-        </div>`;
-    };
+        </div>
+    </div>
 
-    // SEARCH LOGIC
-    if(codes[input]){
-        codes[input].forEach(medName => {
-            pharmacies.forEach(p => {
-                p.stock.forEach(item => {
-                    if(item.name === medName) {
-                        found = true;
-                        resultDiv.innerHTML += createCard(item, p);
-                    }
-                });
-            });
-        });
-    } else {
+<script>
+    const pharmacies = [
+        { name: "UNIKA PHARMACY", address: "Nyabugogo", stock: [{name:"Amoxicillin 500mg", price:2000}, {name:"Paracetamol", price:500}] },
+        { name: "SILOAM PHARMACY", address: "Nyamirambo", stock: [{name:"Amoxicillin 500mg", price:2100}] },
+        { name: "LEGERO PHARMACY", address: "Karama", stock: [{name:"Amoxicillin 500mg", price:1950}, {name:"Ibuprofen", price:3000}] },
+        { name: "KIGALI PHARMA", address: "Town", stock: [{name:"Amoxicillin 500mg", price:2050}] }
+    ];
+
+    const wholesalers = [
+        { id: 1, name: "SUN WHOLESALER", loc: "Kigali Free Zone" },
+        { id: 2, name: "LOTUS WHOLESALER", loc: "Magerwa" },
+        { id: 3, name: "UBUMWE WHOLESALER", loc: "Nyabugogo" },
+        { id: 4, name: "LA MEDICAL WHOLESALER", loc: "City Center" },
+        { id: 5, name: "VIEPHAR WHOLESALER", loc: "Kicukiro" }
+    ];
+
+    // PRE-LOADED 10 ITEMS
+    let cart = [
+        "Amoxicillin 500mg", "Ibuprofen 400mg", "Paracetamol", 
+        "Ciprofloxacin", "Vitamin C", "Surgical Masks", 
+        "Hand Sanitizer", "Insulin Syringes", "Metformin", "Omeprazole"
+    ];
+
+    let selectedWholesalers = [];
+
+    function switchTab(type) {
+        document.getElementById('section-retail').classList.toggle('hidden', type !== 'retail');
+        document.getElementById('section-wholesale').classList.toggle('hidden', type !== 'wholesale');
+        document.getElementById('tab-retail').className = type === 'retail' ? 'tab-active pb-3' : 'text-slate-400 pb-3';
+        document.getElementById('tab-wholesale').className = type === 'wholesale' ? 'tab-active pb-3' : 'text-slate-400 pb-3';
+        if(type === 'wholesale') renderWholesalers();
+    }
+
+    // SEARCH ALL PHARMACIES
+    function searchAll() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const resDiv = document.getElementById('result');
+        if(!query) return;
+        resDiv.innerHTML = "";
+        
+        let found = false;
         pharmacies.forEach(p => {
             p.stock.forEach(item => {
-                if(item.name.toLowerCase().includes(input)){
+                if(item.name.toLowerCase().includes(query)) {
                     found = true;
-                    resultDiv.innerHTML += createCard(item, p);
+                    resDiv.innerHTML += `
+                        <div class="bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center hover:border-blue-300 transition-all shadow-sm">
+                            <div>
+                                <h4 class="font-bold text-slate-800">${item.name}</h4>
+                                <p class="text-xs text-slate-400 italic font-medium tracking-tight">Available at: <span class="text-blue-600">${p.name} - ${p.address}</span></p>
+                            </div>
+                            <button onclick="addToCart('${item.name}')" class="bg-slate-50 text-slate-900 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition-all">Add to List</button>
+                        </div>
+                    `;
                 }
             });
         });
+        if(!found) resDiv.innerHTML = `<p class="text-center py-10 text-slate-400">Not found in retail network.</p>`;
     }
 
-    if(!found){
-        resultDiv.innerHTML = `<div class="p-10 text-center text-red-400 bg-red-50 rounded-2xl border border-red-100">❌ No results found for "${input}"</div>`;
+    function addToCart(n) {
+        cart.push(n);
+        updateCartUI();
     }
-}
 
-function addToCart(name, price){
-    cart.push({name, price});
-    updateCart();
-}
-
-function updateCart(){
-    const cartEl = document.getElementById("cart");
-    const totalEl = document.getElementById("total");
-    const countEl = document.getElementById("cart-count");
-
-    if(cart.length === 0) {
-        cartEl.innerHTML = `<p class="text-sm text-slate-400 text-center py-4 italic">No items added yet</p>`;
-    } else {
-        cartEl.innerHTML = cart.map((item, index) => `
-            <li class="flex justify-between items-center text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
-                <span class="font-medium text-slate-700">${item.name}</span>
-                <div class="flex items-center gap-3">
-                    <span class="font-bold text-slate-900">${item.price.toLocaleString()}</span>
-                    <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600">✕</button>
-                </div>
+    function updateCartUI() {
+        const list = document.getElementById('cart-list');
+        list.innerHTML = cart.map((name, idx) => `
+            <li class="flex justify-between items-center text-sm bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <span class="font-semibold text-slate-700 truncate mr-2">${name}</span>
+                <button onclick="removeItem(${idx})" class="text-slate-300 hover:text-red-500 font-bold">✕</button>
             </li>
         `).join('');
+        document.getElementById('cart-count').innerText = cart.length;
     }
 
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    totalEl.innerText = total.toLocaleString();
-    countEl.innerText = cart.length;
-}
+    function removeItem(idx) {
+        cart.splice(idx, 1);
+        updateCartUI();
+    }
 
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    updateCart();
-}
+    function renderWholesalers() {
+        const grid = document.getElementById('wholesaler-grid');
+        const limit = cart.length >= 10 ? 3 : (cart.length >= 5 ? 2 : 1);
+        
+        document.getElementById('logic-text').innerText = `INQUIRY SCALE: Large (${cart.length} items). Limit: ${limit} Wholesalers Allowed.`;
+
+        // Randomize order
+        const shuffled = [...wholesalers].sort(() => Math.random() - 0.5);
+
+        grid.innerHTML = shuffled.map(w => {
+            const active = selectedWholesalers.includes(w.id);
+            return `
+                <div onclick="selectWholesaler(${w.id}, ${limit})" 
+                     class="p-6 rounded-[2rem] border-2 cursor-pointer transition-all ${active ? 'border-blue-600 bg-blue-50/50 ring-4 ring-blue-50' : 'border-slate-100 bg-white hover:border-slate-300'}">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl shadow-inner">🏢</div>
+                        ${active ? '<span class="bg-blue-600 text-white px-3 py-1 rounded-lg text-[9px] font-bold tracking-widest uppercase">Active</span>' : ''}
+                    </div>
+                    <h3 class="font-extrabold text-slate-800 text-lg uppercase tracking-tight">${w.name}</h3>
+                    <p class="text-[11px] text-slate-400 font-bold uppercase mt-1 tracking-widest">📍 ${w.loc}</p>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function selectWholesaler(id, limit) {
+        if(selectedWholesalers.includes(id)) {
+            selectedWholesalers = selectedWholesalers.filter(x => x !== id);
+        } else {
+            if(selectedWholesalers.length < limit) {
+                selectedWholesalers.push(id);
+            } else {
+                alert(`Selection Limit: You can only select ${limit} wholesalers for your current item list.`);
+            }
+        }
+        renderWholesalers();
+    }
+
+    window.onload = updateCartUI;
 </script>
-
 </body>
 </html>
