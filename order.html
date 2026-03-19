@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rwanda Pharmacy System</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+@keyframes scroll {
+    0% {transform: translateX(0);}
+    100% {transform: translateX(-50%);}
+}
+.animate-scroll {
+    display: flex;
+    width: max-content;
+    animation: scroll 20s linear infinite;
+}
+</style>
+</head>
+
+<body class="bg-slate-100 p-6">
+
+<!-- 🔥 ADS -->
+<div class="bg-white p-3 rounded shadow mb-6 overflow-hidden">
+    <div class="animate-scroll gap-10 font-bold text-sm">
+        <span class="text-green-600">🔥 20% OFF Vitamins</span>
+        <span class="text-blue-600">💊 New Painkillers Available</span>
+        <span class="text-red-500">🚑 Emergency Kits Ready</span>
+    </div>
+</div>
+
+<!-- HEADER -->
+<div class="bg-white p-5 rounded-xl shadow mb-6">
+    <h1 class="text-xl font-bold text-blue-700">💊 Rwanda Pharmacy System</h1>
+</div>
+
+<!-- SEARCH -->
+<div class="bg-white p-5 rounded-xl shadow mb-6 flex gap-3">
+    <input id="search" type="text" placeholder="Search Code (4456) or Medicine"
+        class="border p-2 rounded w-72">
+    <button onclick="searchAll()"
+        class="bg-blue-600 text-white px-4 py-2 rounded">
+        Search
+    </button>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="bg-white p-5 rounded-xl shadow mb-6 hidden"></div>
+
+<div class="grid grid-cols-3 gap-6">
+
+<!-- CART -->
+<div class="bg-white p-5 rounded-xl shadow col-span-1">
+    <h3 class="font-bold mb-3">🛒 Cart</h3>
+    <ul id="cart"></ul>
+    <h3 class="mt-3 font-bold">Total: <span id="total">0</span> RWF</h3>
+</div>
+
+<!-- CHART -->
+<div class="bg-white p-5 rounded-xl shadow col-span-2">
+    <h3 class="font-bold mb-3">📊 Sales Analytics</h3>
+    <canvas id="chart"></canvas>
+</div>
+
+</div>
+
+<!-- 🏢 WHOLESALERS -->
+<div class="max-w-6xl mx-auto mt-10">
+    <div class="bg-white rounded-2xl shadow p-6">
+
+        <div class="flex justify-between mb-4">
+            <h2 class="text-xl font-bold">Find Wholesalers</h2>
+            <button onclick="renderWholesalers()" class="text-blue-600">🔄 Shuffle</button>
+        </div>
+
+        <p class="text-sm mb-4">
+            Based on <span id="item-count-badge">0</span> items, select 
+            <span id="allowed-limit">1</span> wholesaler(s)
+        </p>
+
+        <div id="wholesaler-grid" class="grid grid-cols-3 gap-4"></div>
+
+        <div class="mt-4 flex justify-between">
+            <span>Selected: <b id="selected-count">0</b></span>
+            <button id="quote-btn" disabled
+                class="bg-gray-300 text-white px-4 py-2 rounded">
+                Request Quote
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+// 🏥 PHARMACIES
+const pharmacies = [
+    {
+        name:"UNIKA PHARMACY",
+        address:"Nyabugogo",
+        phone:"0784040780",
+        stock:[
+            {name:"Amoxicillin 500mg", price:2000},
+            {name:"Ibuprofen 400mg", price:3000}
+        ]
+    },
+    {
+        name:"LEGERO PHARMACY",
+        address:"Karama",
+        phone:"0784074997",
+        stock:[
+            {name:"Ibuprofen 400mg", price:3200}
+        ]
+    },
+    {
+        name:"SILOAM PHARMACY",
+        address:"Nyamirambo",
+        phone:"0784040786",
+        stock:[
+            {name:"Amoxicillin 500mg", price:2100}
+        ]
+    }
+];
+
+// 🔐 CODE
+const codes = {
+    "4456":["Amoxicillin 500mg","Ibuprofen 400mg"]
+};
+
+// 🛒 CART
+let cart = [];
+
+// SEARCH
+function searchAll(){
+    const input = document.getElementById("search").value.toLowerCase();
+    const result = document.getElementById("result");
+
+    result.innerHTML="";
+    result.classList.remove("hidden");
+
+    if(codes[input]){
+        codes[input].forEach(m=>showMed(m));
+        return;
+    }
+
+    let found=false;
+
+    pharmacies.forEach(p=>{
+        p.stock.forEach(m=>{
+            if(m.name.toLowerCase().includes(input)){
+                found=true;
+                showCard(p,m);
+            }
+        });
+    });
+
+    if(!found){
+        result.innerHTML="<p class='text-red-500'>No result</p>";
+    }
+}
+
+function showMed(name){
+    pharmacies.forEach(p=>{
+        p.stock.forEach(m=>{
+            if(m.name===name){
+                showCard(p,m);
+            }
+        });
+    });
+}
+
+function showCard(p,m){
+    document.getElementById("result").innerHTML+=`
+    <div class="bg-slate-50 p-3 rounded mb-2">
+        <b>${m.name}</b> - ${m.price} RWF
+        <p class="text-xs">🏥 ${p.name} (${p.address})</p>
+        <button onclick="add('${m.name}',${m.price})"
+            class="bg-green-500 text-white px-2 rounded mt-1">
+            Add
+        </button>
+    </div>`;
+}
+
+// ADD CART
+function add(name,price){
+    cart.push({name,price});
+    updateCart();
+}
+
+// UPDATE CART
+function updateCart(){
+    let total=0;
+    document.getElementById("cart").innerHTML="";
+    cart.forEach(i=>{
+        total+=i.price;
+        document.getElementById("cart").innerHTML+=`<li>${i.name} - ${i.price}</li>`;
+    });
+    document.getElementById("total").innerText=total;
+    renderWholesalers();
+}
+
+// 📊 CHART
+new Chart(document.getElementById("chart"), {
+    type:'bar',
+    data:{
+        labels:['Mon','Tue','Wed','Thu','Fri'],
+        datasets:[{label:'Sales',data:[12000,15000,8000,20000,17000]}]
+    }
+});
+
+// 🏢 WHOLESALERS
+const wholesalers=[
+    {id:1,name:"SUN",location:"Free Zone"},
+    {id:2,name:"LOTUS",location:"Magerwa"},
+    {id:3,name:"UBUMWE",location:"Nyabugogo"}
+];
+
+let selected=[];
+
+function limit(){
+    if(cart.length<=5)return 1;
+    if(cart.length<=10)return 2;
+    return 3;
+}
+
+function renderWholesalers(){
+    const grid=document.getElementById("wholesaler-grid");
+    grid.innerHTML="";
+
+    document.getElementById("item-count-badge").innerText=cart.length;
+    document.getElementById("allowed-limit").innerText=limit();
+
+    wholesalers.forEach(w=>{
+        const active=selected.includes(w.id);
+
+        grid.innerHTML+=`
+        <div onclick="toggle(${w.id})"
+        class="p-3 border rounded cursor-pointer ${active?'bg-blue-100':''}">
+            ${w.name}<br>
+            <small>${w.location}</small>
+        </div>`;
+    });
+
+    document.getElementById("selected-count").innerText=selected.length;
+}
+
+function toggle(id){
+    if(selected.includes(id)){
+        selected=selected.filter(x=>x!==id);
+    }else{
+        if(selected.length<limit()){
+            selected.push(id);
+        }else{
+            alert("Limit reached");
+        }
+    }
+    renderWholesalers();
+}
+
+renderWholesalers();
+
+</script>
+
+</body>
+</html>
